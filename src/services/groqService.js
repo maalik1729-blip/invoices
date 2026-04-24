@@ -3,7 +3,8 @@
    via Groq API to generate realistic export product data.
 ──────────────────────────────────────────────────────────── */
 
-const BACKEND_URL = 'http://localhost:5000/api/groq/generate'
+const BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+const BACKEND_URL = `${BASE}/groq/generate`
 
 /**
  * generateProducts
