@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 import FormSection, { DEFAULT_ITEMS } from './components/FormSection'
 import PreviewSection from './components/PreviewSection'
 import ThemesSection from './components/ThemesSection'
 import { THEMES, DOCS, buildThemeCSS, applyData } from './data/config'
 import { downloadAllAsPDFZip } from './utils/downloadZip'
+import { searchUser, saveUser, listUsers } from './services/userService'
 import './App.css'
 
 /* ── Empty form defaults (no pre-filled data) ─────────────── */
@@ -47,9 +48,53 @@ export default function App() {
   const [viewer, setViewer]               = useState(null)
   const [generating, setGenerating]       = useState(false)
   const [dlProgress, setDlProgress]       = useState(null)
+  const [saveStatus, setSaveStatus]       = useState('') // 'saving' | 'saved' | 'error' | ''
+  const [savedNames, setSavedNames]       = useState([]) // autocomplete list
+  const saveToastTimer                    = useRef(null)
+
+  /* ── Load saved seller names for autocomplete on mount ─────────── */
+  React.useEffect(() => {
+    listUsers().then(names => setSavedNames(names))
+  }, [])
+
+  /* ── Show save toast then auto-hide ────────────────────────────── */
+  const showToast = (status) => {
+    setSaveStatus(status)
+    clearTimeout(saveToastTimer.current)
+    saveToastTimer.current = setTimeout(() => setSaveStatus(''), 3000)
+  }
+
+  /* ── Auto-fill when sellerName matches a saved record ──────────── */
+  const handleSellerNameBlur = useCallback(async (name) => {
+    if (!name || name.trim().length < 2) return
+    const result = await searchUser(name.trim())
+    if (result.found && result.data) {
+      const { _id, __v, createdAt, updatedAt, items: savedItems, ...fields } = result.data
+      setFormData(prev => ({ ...prev, ...fields }))
+      if (savedItems && savedItems.length > 0) setItems(savedItems)
+      showToast('autofilled')
+    }
+  }, [])
+
+  /* ── Save to MongoDB ────────────────────────────────────────────── */
+  const handleSave = useCallback(async (currentForm, currentItems) => {
+    if (!currentForm.sellerName?.trim()) return
+    showToast('saving')
+    const result = await saveUser(currentForm, currentItems)
+    if (result.success) {
+      showToast('saved')
+      setSavedNames(prev =>
+        prev.includes(currentForm.sellerName) ? prev : [currentForm.sellerName, ...prev]
+      )
+    } else {
+      showToast('error')
+    }
+  }, [])
 
   /* ── Generate documents ───────────────────────────────────── */
   const generateDocuments = async () => {
+    // Save to MongoDB first (upsert)
+    await handleSave(formData, items)
     setGenerating(true)
     const themeCSS = buildThemeCSS(activeTheme)
     const docData  = {
@@ -101,6 +146,9 @@ export default function App() {
             setItems={setItems}
             onGenerate={generateDocuments}
             generating={generating}
+            onSellerNameBlur={handleSellerNameBlur}
+            savedNames={savedNames}
+            onManualSave={() => handleSave(formData, items)}
           />
         )
       case 'preview':
@@ -128,8 +176,22 @@ export default function App() {
 
   const readyCount = Object.values(generatedDocs).filter(Boolean).length
 
+  /* ── Save status toast ─────────────────────────────────────────── */
+  const toastMsg = {
+    saving:     '💾 Saving to database…',
+    saved:      '✅ Saved to MongoDB!',
+    autofilled: '🔄 Details auto-filled from saved record!',
+    error:      '❌ Save failed — check backend',
+  }[saveStatus] || ''
+
   return (
     <div className="app">
+      {/* ── SAVE TOAST ── */}
+      {toastMsg && (
+        <div className={`save-toast save-toast--${saveStatus}`}>
+          {toastMsg}
+        </div>
+      )}
       {/* ── TOP NAV HEADER ── */}
       <header className="app-header">
         <div className="header-brand">

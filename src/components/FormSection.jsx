@@ -212,7 +212,7 @@ function BankSelect({ formData, setFormData }) {
 }
 
 /* ══ MAIN COMPONENT ════════════════════════════════════════════════ */
-export default function FormSection({ formData, setFormData, items, setItems, onGenerate, generating }) {
+export default function FormSection({ formData, setFormData, items, setItems, onGenerate, generating, onSellerNameBlur, savedNames = [], onManualSave }) {
   const set = key => val => setFormData(p => ({ ...p, [key]: val }))
 
   // ── AI Generator state ──────────────────────────────────────
@@ -281,7 +281,21 @@ export default function FormSection({ formData, setFormData, items, setItems, on
           </div>
         </div>
         <div className="form-grid">
-          <Field full  label="Business / Company Name"         id="sellerName"        value={formData.sellerName}        onChange={set('sellerName')} />
+          {/* sellerName with autocomplete + auto-fill on blur */}
+          <div className="form-group full">
+            <label htmlFor="sellerName">Business / Company Name</label>
+            <input
+              id="sellerName"
+              list="seller-names-list"
+              value={formData.sellerName}
+              placeholder="Type your company name…"
+              onChange={e => set('sellerName')(e.target.value)}
+              onBlur={e => onSellerNameBlur && onSellerNameBlur(e.target.value)}
+            />
+            <datalist id="seller-names-list">
+              {savedNames.map(n => <option key={n} value={n} />)}
+            </datalist>
+          </div>
           <Field full  label="Business Tagline"                id="sellerTagline"     value={formData.sellerTagline}     onChange={set('sellerTagline')} />
           <Field full  label="Address Line 1"                  id="sellerAddr1"       value={formData.sellerAddr1}       onChange={set('sellerAddr1')} />
           <Field full  label="Address Line 2"                  id="sellerAddr2"       value={formData.sellerAddr2}       onChange={set('sellerAddr2')} />
@@ -655,6 +669,7 @@ export default function FormSection({ formData, setFormData, items, setItems, on
 
       <div className="form-actions">
         <button className="btn-reset" onClick={() => window.location.reload()}>Reset to Defaults</button>
+        <button className="btn-save-db" onClick={onManualSave}>💾 Save to Database</button>
         <button
           className="btn-generate-big"
           onClick={onGenerate}
