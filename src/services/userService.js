@@ -1,7 +1,7 @@
 /* ── Frontend service to talk to the Express backend ─────────────────
    Base URL points to the backend running on port 5000 in dev.        */
 
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+const BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://invoices-bbln.onrender.com/api' : 'http://localhost:5000/api')
 
 /**
  * Search for a saved record by sellerName.

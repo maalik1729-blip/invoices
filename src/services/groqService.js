@@ -3,7 +3,7 @@
    via Groq API to generate realistic export product data.
 ──────────────────────────────────────────────────────────── */
 
-const BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+const BASE = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? 'https://invoices-bbln.onrender.com/api' : 'http://localhost:5000/api')
 const BACKEND_URL = `${BASE}/groq/generate`
 
 /**
