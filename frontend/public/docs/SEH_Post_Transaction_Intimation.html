@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Post-Transaction Intimation – Siva Electronics</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy:    #1B4332;
+    --red:     #D4A017;
+    --silver:  #F5F0E8;
+    --border:  #C8BFA8;
+    --text:    #1A1E0F;
+    --muted:   #6B7355;
+    --white:   #FFFDF7;
+    --gold:    #4A7C59;
+    --gold-lt: #EAF2EC;
+  }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: #EDF3EE;
+    display: flex;
+    justify-content: center;
+    padding: 40px 16px;
+    color: #1A1E0F;
+    font-size: 13px;
+  }
+
+  .page {
+    width: 794px;
+    background: #ffffff;
+    box-shadow: 0 4px 40px rgba(0,0,0,0.18);
+    box-sizing: border-box;
+  }
+
+  /* ── TOP STRIPE ── */
+  .stripe-top {
+    height: 6px;
+    background: linear-gradient(90deg, #1B4332 0%, #1B4332 60%, #D4A017 60%, #D4A017 100%);
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 24px;
+    padding: 32px 40px 24px;
+    border-bottom: 2px solid var(--navy);
+  }
+
+  .brand-name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: -0.5px;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .brand-tagline {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--red);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .brand-address {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .invoice-meta {
+    text-align: right;
+  }
+
+  .invoice-label {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--navy);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .meta-table { width: 100%; }
+  .meta-table td {
+    font-size: 12px;
+    padding: 2px 0;
+    vertical-align: top;
+  }
+  .meta-table td:first-child {
+    color: var(--muted);
+    padding-right: 16px;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .meta-table td:last-child {
+    font-weight: 600;
+    color: var(--navy);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  /* ── PURPOSE BANNER ── */
+  .purpose-banner {
+    background: var(--gold-lt);
+    border-left: 4px solid var(--gold);
+    padding: 8px 40px;
+    font-size: 11.5px;
+    color: var(--gold);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── PARTIES SECTION ── */
+  .parties {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .party-block {
+    padding: 20px 28px;
+    border-right: 1px solid var(--border);
+  }
+  .party-block:last-child { border-right: none; }
+
+  .party-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--red);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .party-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .party-name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 5px;
+  }
+
+  .party-detail {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .party-detail strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  /* ── ITEMS TABLE ── */
+  .table-wrap { padding: 0 40px; margin-top: 24px; }
+
+  .section-title {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--navy);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  table.items {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+
+  table.items thead tr {
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  table.items thead th {
+    padding: 10px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  table.items thead th.right { text-align: right; }
+
+  table.items tbody tr { border-bottom: 1px solid var(--border); }
+  table.items tbody tr:nth-child(even) td { background: var(--silver); }
+
+  table.items tbody td {
+    padding: 11px 12px;
+    vertical-align: top;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  table.items tbody td.right { text-align: right; }
+  table.items tbody td.center { text-align: center; }
+
+  .item-num {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .item-desc {
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 2px;
+  }
+
+  .item-sub {
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .hs-badge {
+    display: inline-block;
+    background: #E2F0E8;
+    color: #1B5E3A;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── TOTALS ── */
+  .bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 58mm;
+    gap: 32px;
+    padding: 24px 40px 28px;
+    border-top: 2px solid var(--border);
+    margin-top: 0;
+  }
+
+  /* Banking */
+  .bank-block {}
+
+  .bank-title {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--navy);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .bank-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .bank-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 4px 16px;
+    font-size: 12px;
+  }
+
+  .bank-grid .bl { color: var(--muted); white-space: nowrap; }
+  .bank-grid .bv { font-weight: 600; color: var(--text); }
+
+  .purpose-code-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--navy);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 3px;
+    margin-top: 10px;
+    letter-spacing: 0.5px;
+  }
+
+  /* Totals right side */
+  .totals-block {}
+
+  .totals-rows { width: 100%; }
+
+  .tot-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 12.5px;
+  }
+
+  .tot-row .tl { color: var(--muted); }
+  .tot-row .tv { font-weight: 600; color: var(--text); }
+
+  .tot-row.grand {
+    background: var(--navy);
+    padding: 10px 12px;
+    border-radius: 4px;
+    margin-top: 6px;
+    border: none;
+  }
+  .tot-row.grand .tl { color: rgba(255,255,255,0.75); font-weight: 600; font-size: 12px; }
+  .tot-row.grand .tv { color: var(--white); font-size: 15px; font-family: 'Libre Baskerville', serif; }
+
+  .words-box {
+    background: var(--silver);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 8px 12px;
+    font-size: 11.5px;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+  .words-box strong { color: var(--text); font-style: normal; font-weight: 600; }
+
+  /* ── TERMS ── */
+  .terms-section {
+    margin: 0 40px 24px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .terms-header {
+    background: var(--silver);
+    padding: 8px 16px;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--navy);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .terms-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 14px 16px;
+    gap: 10px 24px;
+  }
+
+  .term-item {
+    font-size: 11.5px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+  .term-item strong {
+    display: block;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  /* ── SIGNATURE ── */
+  .sig-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin: 0 40px 28px;
+  }
+
+  .sig-block {
+    border-top: 2px solid var(--navy);
+    padding-top: 10px;
+  }
+
+  .sig-name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--navy);
+  }
+
+  .sig-role { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    background: var(--navy);
+    padding: 14px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-left { font-size: 10.5px; color: rgba(255,255,255,0.5); line-height: 1.6; }
+  .footer-right {
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .stripe-bottom {
+    height: 5px;
+    background: linear-gradient(90deg, #D4A017 0%, #D4A017 40%, #1B4332 40%, #1B4332 100%);
+  }
+
+  
+
+  /* ══ ALIGNMENT & WIDTH FIXES ════════════════════════════════════════════ */
+  .page {
+    background: #ffffff;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+
+  /* Header grid — fixed columns so right meta never wraps */
+  .header {
+    display: grid;
+    grid-template-columns: 1fr 260px;
+    gap: 20px;
+    padding: 28px 36px 22px;
+    border-bottom: 2px solid #1B4332;
+    align-items: start;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  /* Meta table right-alignment */
+  .invoice-meta { text-align: right; min-width: 0; }
+  .meta-table { width: 100%; table-layout: fixed; }
+  .meta-table td { 
+    font-size: 11.5px; padding: 2px 0; vertical-align: top; 
+    word-break: break-word;
+  }
+  .meta-table td:first-child {
+    color: #6B7355; padding-right: 12px; text-align: right;
+    white-space: nowrap; width: 110px;
+  }
+  .meta-table td:last-child {
+    font-weight: 600; color: #1B4332; text-align: right;
+  }
+
+  /* Parties — equal columns, no overflow */
+  .parties {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    border-bottom: 1px solid #C8BFA8;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .party-block {
+    padding: 16px 22px;
+    border-right: 1px solid #C8BFA8;
+    min-width: 0;
+    word-break: break-word;
+    box-sizing: border-box;
+  }
+  .party-block:last-child { border-right: none; }
+  .party-detail { font-size: 11.5px; color: #6B7355; line-height: 1.7; word-break: break-word; }
+  .party-name   { font-size: 13px; }
+
+  /* Table wrap full width */
+  .table-wrap { padding: 0 36px; box-sizing: border-box; width: 100%; }
+
+  /* Items table */
+  table.items {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    table-layout: fixed;
+  }
+  table.items thead th { padding: 9px 10px; font-size: 9.5px; }
+  table.items tbody td { padding: 9px 10px; word-break: break-word; }
+  table.items tbody td.right { text-align: right; }
+  table.items tbody td.center { text-align: center; }
+  .item-desc { font-size: 11.5px; }
+  .item-sub  { font-size: 10.5px; }
+  .hs-badge  { font-size: 9.5px; padding: 2px 6px; }
+
+  /* Bottom section — two column, fixed layout */
+  .bottom-section {
+    display: grid;
+    grid-template-columns: 1fr 55mm;
+    gap: 24px;
+    padding: 20px 36px 24px;
+    border-top: 2px solid #C8BFA8;
+    box-sizing: border-box;
+    width: 100%;
+    align-items: start;
+  }
+
+  /* Bank grid */
+  .bank-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 3px 12px;
+    font-size: 11.5px;
+  }
+  .bank-grid .bl { color: #6B7355; white-space: nowrap; font-size: 11.5px; }
+  .bank-grid .bv { font-weight: 600; font-size: 11.5px; word-break: break-word; }
+
+  /* Totals */
+  .totals-block { min-width: 0; }
+  .tot-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid #C8BFA8;
+    font-size: 11.5px;
+    gap: 8px;
+  }
+  .tot-row .tl { color: #6B7355; flex: 1; }
+  .tot-row .tv { font-weight: 600; white-space: nowrap; }
+  .tot-row.grand { padding: 9px 10px; }
+  .words-box { font-size: 11px; padding: 7px 10px; }
+
+  /* Terms grid */
+  .terms-section { margin: 0 36px 20px; }
+  .terms-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding: 12px 14px;
+    gap: 8px 20px;
+  }
+  .term-item { font-size: 11px; line-height: 1.6; }
+  .term-item strong { font-size: 9.5px; }
+
+  /* Sig section */
+  .sig-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin: 0 36px 24px;
+    box-sizing: border-box;
+  }
+  .sig-block { border-top: 2px solid #1B4332; padding-top: 10px; }
+  .sig-name  { font-size: 13px; }
+  .sig-role  { font-size: 11px; }
+
+  /* Purpose banner */
+  .purpose-banner {
+    padding: 7px 36px;
+    font-size: 11px;
+    word-break: break-word;
+  }
+
+  /* Section title */
+  .section-title {
+    font-size: 9px;
+    margin-bottom: 8px;
+    margin-top: 20px;
+  }
+
+  /* Footer */
+  .footer {
+    padding: 12px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .footer-left  { font-size: 10px; line-height: 1.6; }
+  .footer-right { font-size: 9.5px; text-align: right; line-height: 1.6; }
+
+  /* Letter body */
+  .ltr-body { padding: 0 36px 28px; font-size: 12.5px; line-height: 1.9; box-sizing: border-box; width: 100%; }
+  .ltr-address { font-size: 12px; }
+  .ltr-subject { padding: 9px 14px; font-size: 12.5px; }
+  .ltr-salutation { font-size: 12.5px; }
+  .ltr-para { font-size: 12.5px; margin-bottom: 14px; }
+
+  /* Info grid in letters */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 4px 16px;
+    font-size: 12px;
+    line-height: 1.8;
+  }
+  .info-grid .il { color: #6B7355; }
+  .info-grid .iv { font-weight: 600; word-break: break-word; }
+
+  /* Highlight cards */
+  .highlight-card { padding: 14px 16px; margin: 12px 0; }
+  .success-card   { padding: 14px 16px; margin: 12px 0; }
+  .hc-title       { font-size: 9px; margin-bottom: 8px; }
+
+  /* Transaction table in letters */
+  .txn-table { font-size: 11.5px; }
+  .txn-table thead th { padding: 8px 12px; font-size: 9.5px; }
+  .txn-table tbody td { padding: 9px 12px; font-size: 11.5px; }
+  .txn-table tfoot td { padding: 9px 12px; font-size: 11.5px; }
+
+  /* Clause block */
+  .clause-block { margin-bottom: 20px; padding-left: 14px; }
+  .clause-title { font-size: 12px; }
+  .clause-body  { font-size: 11.5px; line-height: 1.8; }
+  .clause-body ul { margin: 4px 0 4px 18px; }
+  .clause-body li { margin-bottom: 3px; }
+
+  /* TOC */
+  .toc-grid { gap: 3px 24px; font-size: 11px; padding: 12px 14px; }
+  .toc-item { padding: 3px 0; }
+
+  /* Request / alert boxes */
+  .request-box { padding: 14px 16px; font-size: 12px; line-height: 1.8; }
+  .alert-box   { padding: 10px 14px; font-size: 11.5px; }
+
+  /* Dual sig in letters */
+  .dual-sig { gap: 24px; margin-top: 20px; }
+
+  /* Brand name size */
+  .brand-name    { font-size: 22px; }
+  .brand-tagline { font-size: 10px; }
+  .brand-address { font-size: 11px; line-height: 1.6; }
+  .invoice-label { font-size: 17px !important; }
+  .doc-stamp     { font-size: 10px; padding: 2px 8px; }
+
+  /* COO panels */
+  .party-block .party-detail { word-break: break-all; }
+
+
+  
+  
+    .page {
+      width: 794px;
+      min-width: 794px;
+      max-width: 794px;
+    }
+  }
+
+
+  @media print {
+
+  /* ══ COMPLETE PDF PRINT FIX ══════════════════════════════════════════════ */
+
+  @page {
+    size: 210mm 297mm;
+    margin: 8mm 10mm 8mm 10mm;
+  }
+
+  html, body {
+    width: 210mm;
+    height: auto;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .page {
+    width: 190mm !important;
+    min-width: 0 !important;
+    max-width: 190mm !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+  }
+
+  /* HEADER — fixed two-column */
+  .header {
+    display: grid !important;
+    grid-template-columns: 1fr 58mm !important;
+    gap: 4mm !important;
+    padding: 5mm 6mm 4mm !important;
+    border-bottom: 0.5mm solid #1B4332 !important;
+    align-items: start !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .brand-name    { font-size: 16pt !important; line-height: 1.2 !important; }
+  .brand-tagline { font-size: 7pt !important; margin-bottom: 2mm !important; }
+  .brand-address { font-size: 7pt !important; line-height: 1.5 !important; }
+
+  .invoice-meta  { text-align: right !important; }
+  .invoice-label { font-size: 13pt !important; margin-bottom: 2mm !important; }
+  .doc-stamp     { font-size: 7pt !important; padding: 1mm 3mm !important; margin-bottom: 2mm !important; display: inline-block !important; }
+
+  .meta-table            { width: 100% !important; table-layout: auto !important; }
+  .meta-table td         { font-size: 7pt !important; padding: 0.5mm 0 !important; }
+  .meta-table td:first-child { white-space: nowrap !important; padding-right: 3mm !important; width: auto !important; }
+  .meta-table td:last-child  { white-space: nowrap !important; }
+
+  /* BANNER */
+  .purpose-banner { padding: 2mm 6mm !important; font-size: 7pt !important; }
+
+  /* PARTIES */
+  .parties {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr)) !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  .party-block  { padding: 3mm 4mm !important; box-sizing: border-box !important; min-width: 0 !important; }
+  .party-label  { font-size: 6.5pt !important; margin-bottom: 2mm !important; }
+  .party-name   { font-size: 9pt !important; margin-bottom: 1mm !important; }
+  .party-detail { font-size: 7pt !important; line-height: 1.6 !important; word-break: break-word !important; }
+
+  /* TABLE */
+  .table-wrap   { padding: 0 6mm !important; width: 100% !important; box-sizing: border-box !important; }
+  .section-title { font-size: 7pt !important; margin: 3mm 0 2mm !important; }
+
+  table.items   {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+    font-size: 7pt !important;
+  }
+  table.items colgroup { display: table-column-group !important; }
+  table.items thead th {
+    padding: 2mm 2mm !important;
+    font-size: 6.5pt !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+  }
+  table.items tbody td {
+    padding: 2mm 2mm !important;
+    font-size: 7pt !important;
+    word-break: break-word !important;
+    vertical-align: top !important;
+  }
+  .item-num  { font-size: 6.5pt !important; }
+  .item-desc { font-size: 7.5pt !important; font-weight: 600 !important; margin-bottom: 0.5mm !important; }
+  .item-sub  { font-size: 6.5pt !important; }
+  .hs-badge  { font-size: 6pt !important; padding: 0.5mm 2mm !important; }
+
+  /* BOTTOM SECTION */
+  .bottom-section {
+    display: grid !important;
+    grid-template-columns: 1fr 52mm !important;
+    gap: 5mm !important;
+    padding: 4mm 6mm !important;
+    border-top: 0.5mm solid #C8BFA8 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    align-items: start !important;
+  }
+  .bank-title  { font-size: 7pt !important; margin-bottom: 2mm !important; }
+  .bank-grid   {
+    display: grid !important;
+    grid-template-columns: auto 1fr !important;
+    gap: 1mm 3mm !important;
+    font-size: 7pt !important;
+  }
+  .bank-grid .bl { font-size: 7pt !important; white-space: nowrap !important; }
+  .bank-grid .bv { font-size: 7pt !important; word-break: break-word !important; }
+  .purpose-code-tag { font-size: 6.5pt !important; padding: 1mm 3mm !important; margin-top: 2mm !important; }
+
+  .totals-block { min-width: 0 !important; }
+  .tot-row      { padding: 1.5mm 0 !important; font-size: 7.5pt !important; gap: 4mm !important; }
+  .tot-row.grand { padding: 2mm 3mm !important; }
+  .tot-row .tl  { font-size: 7.5pt !important; }
+  .tot-row .tv  { font-size: 7.5pt !important; white-space: nowrap !important; }
+  .tot-row.grand .tv { font-size: 10pt !important; }
+  .words-box    { font-size: 7pt !important; padding: 2mm 3mm !important; margin-top: 2mm !important; }
+
+  /* TERMS */
+  .terms-section { margin: 0 6mm 4mm !important; }
+  .terms-header  { padding: 2mm 4mm !important; font-size: 7pt !important; }
+  .terms-grid    {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    padding: 3mm 4mm !important;
+    gap: 2mm 4mm !important;
+  }
+  .term-item        { font-size: 7pt !important; line-height: 1.5 !important; }
+  .term-item strong { font-size: 6.5pt !important; }
+
+  /* SIGNATURE */
+  .sig-section {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 5mm !important;
+    margin: 0 6mm 5mm !important;
+    box-sizing: border-box !important;
+  }
+  .sig-block      { border-top: 0.5mm solid #1B4332 !important; padding-top: 2mm !important; }
+  .sig-name       { font-size: 10pt !important; }
+  .sig-role       { font-size: 7pt !important; margin-top: 0.5mm !important; }
+
+  /* FOOTER */
+  .footer {
+    padding: 3mm 6mm !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    gap: 4mm !important;
+  }
+  .footer-left  { font-size: 7pt !important; line-height: 1.5 !important; }
+  .footer-right { font-size: 7pt !important; text-align: right !important; line-height: 1.5 !important; }
+
+  /* STRIPES */
+  .stripe-top    { height: 2mm !important; }
+  .stripe-bottom { height: 1.5mm !important; }
+
+  /* LETTER BODY */
+  .ltr-body       { padding: 0 6mm 5mm !important; font-size: 8pt !important; line-height: 1.8 !important; }
+  .ltr-date-block { font-size: 8pt !important; margin-bottom: 3mm !important; }
+  .ltr-address    { font-size: 8pt !important; line-height: 1.7 !important; margin-bottom: 3mm !important; }
+  .ltr-subject    { padding: 2mm 4mm !important; font-size: 8pt !important; margin-bottom: 4mm !important; }
+  .ltr-salutation { font-size: 8pt !important; margin-bottom: 3mm !important; }
+  .ltr-para       { font-size: 8pt !important; margin-bottom: 3mm !important; line-height: 1.8 !important; }
+  .ltr-sig-line   { border-top: 0.5mm solid #1B4332 !important; padding-top: 2mm !important; width: 60mm !important; }
+  .ltr-sig-name   { font-size: 10pt !important; }
+  .ltr-sig-role   { font-size: 7pt !important; margin-top: 0.5mm !important; }
+  .seal-box       { width: 25mm !important; height: 12mm !important; font-size: 6.5pt !important; margin-top: 2mm !important; }
+  .dual-sig       { gap: 6mm !important; margin-top: 5mm !important; }
+
+  /* INFO GRID in letters */
+  .info-grid {
+    display: grid !important;
+    grid-template-columns: 40mm 1fr !important;
+    gap: 1mm 4mm !important;
+    font-size: 7.5pt !important;
+    line-height: 1.7 !important;
+  }
+  .info-grid .il { color: #6B7355 !important; font-size: 7.5pt !important; }
+  .info-grid .iv { font-weight: 600 !important; font-size: 7.5pt !important; word-break: break-word !important; }
+
+  /* HIGHLIGHT / SUCCESS CARDS */
+  .highlight-card { padding: 3mm 4mm !important; margin: 3mm 0 !important; }
+  .success-card   { padding: 3mm 4mm !important; margin: 3mm 0 !important; }
+  .hc-title       { font-size: 6.5pt !important; margin-bottom: 2mm !important; }
+
+  /* TXN TABLE */
+  .txn-table          { font-size: 7pt !important; table-layout: fixed !important; }
+  .txn-table thead th { padding: 2mm 2.5mm !important; font-size: 6.5pt !important; }
+  .txn-table tbody td { padding: 2mm 2.5mm !important; font-size: 7pt !important; }
+  .txn-table tfoot td { padding: 2mm 2.5mm !important; font-size: 7pt !important; }
+  .status-pill        { font-size: 6pt !important; padding: 0.5mm 2mm !important; }
+
+  /* CLAUSE BLOCKS */
+  .clause-block  { margin-bottom: 4mm !important; padding-left: 4mm !important; border-left-width: 0.8mm !important; }
+  .clause-header { gap: 3mm !important; margin-bottom: 1.5mm !important; }
+  .clause-num    { width: 5mm !important; height: 5mm !important; font-size: 7pt !important; }
+  .clause-title  { font-size: 8pt !important; }
+  .clause-body   { font-size: 7.5pt !important; line-height: 1.7 !important; }
+  .clause-body ul { margin: 1mm 0 1mm 4mm !important; }
+  .clause-body li { margin-bottom: 1mm !important; font-size: 7.5pt !important; }
+  .clause-ol li   { font-size: 7.5pt !important; margin-bottom: 2mm !important; }
+
+  /* TOC */
+  .toc-grid { gap: 1mm 5mm !important; font-size: 7.5pt !important; padding: 3mm 4mm !important; }
+  .toc-item { padding: 1mm 0 !important; }
+
+  /* REQUEST / ALERT */
+  .request-box { padding: 3mm 4mm !important; font-size: 7.5pt !important; line-height: 1.7 !important; }
+  .alert-box   { padding: 2mm 4mm !important; font-size: 7.5pt !important; }
+
+  /* PREAMBLE */
+  .section-divider { font-size: 7pt !important; margin: 4mm 0 2mm !important; }
+
+  /* PAGE BREAKS */
+  .header         { page-break-inside: avoid !important; }
+  .parties        { page-break-inside: avoid !important; }
+  .bottom-section { page-break-inside: avoid !important; }
+  .terms-section  { page-break-inside: avoid !important; }
+  .sig-section    { page-break-inside: avoid !important; }
+  .footer         { page-break-inside: avoid !important; }
+  .clause-block   { page-break-inside: avoid !important; }
+  .highlight-card { page-break-inside: avoid !important; }
+  .success-card   { page-break-inside: avoid !important; }
+  .ltr-sig-block  { page-break-inside: avoid !important; }
+  .dual-sig       { page-break-inside: avoid !important; }
+  tr              { page-break-inside: avoid !important; }
+  thead           { display: table-header-group !important; }
+  tfoot           { display: table-footer-group !important; }
+
+  }
+
+
+  .page { width: 794px; background: #fff; box-shadow: 0 4px 40px rgba(0,0,0,0.18); box-sizing: border-box; }
+  body { font-family: 'Source Sans 3', sans-serif; background: #EDF3EE;
+    display: flex; justify-content: center; padding: 40px 16px; color: #1A1E0F; font-size: 13px; }
+  .header { display:grid; grid-template-columns:1fr 260px; gap:20px; padding:28px 36px 22px;
+    border-bottom:2px solid #1B4332; align-items:start; box-sizing:border-box; width:100%; }
+  .invoice-meta { text-align:right; }
+  .meta-table { width:100%; table-layout:fixed; }
+  .meta-table td { font-size:11.5px; padding:2px 0; vertical-align:top; }
+  .meta-table td:first-child { color:#6B7355; padding-right:12px; text-align:right; white-space:nowrap; width:110px; }
+  .meta-table td:last-child { font-weight:600; color:#1B4332; text-align:right; }
+  .parties { display:grid; grid-template-columns:repeat(auto-fit,minmax(0,1fr));
+    border-bottom:1px solid #C8BFA8; width:100%; box-sizing:border-box; }
+  .party-block { padding:16px 22px; border-right:1px solid #C8BFA8; min-width:0;
+    word-break:break-word; box-sizing:border-box; }
+  .party-block:last-child { border-right:none; }
+  .party-detail { font-size:11.5px; color:#6B7355; line-height:1.7; word-break:break-word; }
+  .party-name { font-size:13px; }
+  .table-wrap { padding:0 36px; box-sizing:border-box; width:100%; }
+  table.items { width:100%; border-collapse:collapse; font-size:11.5px; table-layout:fixed; }
+  table.items thead th { padding:9px 10px; font-size:9.5px; }
+  table.items tbody td { padding:9px 10px; word-break:break-word; }
+  .bottom-section { display:grid; grid-template-columns:1fr 240px; gap:24px;
+    padding:20px 36px 24px; border-top:2px solid #C8BFA8; box-sizing:border-box;
+    width:100%; align-items:start; }
+  .bank-grid { display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-size:11.5px; }
+  .bank-grid .bl { color:#6B7355; white-space:nowrap; }
+  .bank-grid .bv { font-weight:600; word-break:break-word; }
+  .tot-row { display:flex; justify-content:space-between; align-items:center;
+    padding:5px 0; border-bottom:1px solid #C8BFA8; font-size:11.5px; gap:8px; }
+  .tot-row .tl { color:#6B7355; flex:1; }
+  .tot-row .tv { font-weight:600; white-space:nowrap; }
+  .tot-row.grand { padding:9px 10px; }
+  .tot-row.grand .tv { font-size:10pt; }
+  .terms-section { margin:0 36px 20px; }
+  .terms-grid { display:grid; grid-template-columns:repeat(3,1fr); padding:12px 14px; gap:8px 20px; }
+  .term-item { font-size:11px; line-height:1.6; }
+  .term-item strong { font-size:9.5px; display:block; text-transform:uppercase;
+    letter-spacing:.8px; color:#6B7355; margin-bottom:2px; }
+  .sig-section { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:0 36px 24px; }
+  .sig-block { border-top:2px solid #1B4332; padding-top:10px; }
+  .sig-name { font-family:'Libre Baskerville',serif; font-size:14px; font-weight:700; color:#1B4332; }
+  .sig-role { font-size:11px; color:#6B7355; margin-top:2px; }
+  .footer { padding:12px 36px; display:flex; justify-content:space-between;
+    align-items:center; gap:16px; width:100%; box-sizing:border-box; }
+  .footer-left { font-size:10px; line-height:1.6; }
+  .footer-right { font-size:9.5px; text-align:right; line-height:1.6; }
+  .doc-stamp { display:inline-block; border:2px solid var(--red); color:var(--red);
+    font-family:'Libre Baskerville',serif; font-size:11px; font-weight:700;
+    letter-spacing:2px; text-transform:uppercase; padding:3px 10px; border-radius:2px; margin-bottom:8px; }
+  .words-box { background:var(--silver); border:1px solid var(--border); border-radius:3px;
+    padding:7px 10px; font-size:11px; font-style:italic; margin-top:8px; line-height:1.5; }
+  .words-box strong { font-style:normal; font-weight:600; color:var(--text); }
+  .section-title { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:2px;
+    color:#1B4332; margin:20px 0 8px; display:flex; align-items:center; gap:10px; }
+  .section-title::after { content:''; flex:1; height:1px; background:var(--border); }
+  .purpose-banner { padding:7px 36px; font-size:11px; }
+
+@media print { 
+  @page { size: 210mm 297mm; margin: 8mm 10mm; }
+  html, body { width: 210mm; margin: 0 !important; padding: 0 !important;
+    background: #fff !important;
+    -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body { background: #fff !important; padding: 0 !important; display: block !important; }
+    .page { width: 190mm !important; max-width: 190mm !important; margin: 0 auto !important;
+      box-shadow: none !important; }
+    .header,.parties,.bottom-section,.terms-section,.sig-section,.table-wrap,
+    .footer { page-break-inside: avoid; }
+    tr { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+ }
+
+  .ltr-body { padding: 0 36px 28px; font-size: 12.5px; line-height: 1.9; color: var(--text); }
+  .ltr-para { margin-bottom: 14px; font-size: 12.5px; line-height: 1.9; }
+  .ltr-date-block { font-size: 12px; color: var(--muted); margin-bottom: 18px; }
+  .ltr-address { margin-bottom: 18px; font-size: 12px; line-height: 1.8; }
+  .ltr-address strong { color: var(--navy); }
+  .ltr-subject { background: var(--silver); border-left: 4px solid var(--navy);
+    padding: 9px 14px; font-size: 12px; font-weight: 700; color: var(--navy);
+    margin-bottom: 20px; border-radius: 0 4px 4px 0; line-height: 1.6; }
+  .ltr-salutation { font-size: 12.5px; font-weight: 600; margin-bottom: 14px; }
+  .ltr-sig-block { margin-top: 24px; }
+  .ltr-sig-line { border-top: 2px solid var(--navy); padding-top: 10px; width: 260px; }
+  .ltr-sig-name { font-family: 'Libre Baskerville', serif; font-size: 13px; font-weight: 700; color: var(--navy); }
+  .ltr-sig-role { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .seal-box { border: 1px dashed var(--border); border-radius: 4px; width: 25mm; height: 12mm;
+    display: flex; align-items: center; justify-content: center; font-size: 9px;
+    color: var(--muted); margin-top: 6px; }
+  .success-card { background: #EDF7F0; border: 1px solid #A8D5B5;
+    border-left: 4px solid #2A7D4F; border-radius: 4px; padding: 14px 16px; margin: 12px 0; }
+  .success-title { font-size: 8.5pt; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 2px; color: #2A7D4F; margin-bottom: 10px; }
+  .highlight-card { background: #EAF3EC; border: 1px solid #A8CBB5;
+    border-left: 4px solid #1B4332; border-radius: 4px; padding: 14px 16px; margin: 12px 0; }
+  .hc-title { font-size: 8.5pt; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 2px; color: #1B4332; margin-bottom: 10px; }
+  .txn-table { width: 100%; border-collapse: collapse; font-size: 11.5px; margin: 14px 0; table-layout: fixed; }
+  .txn-table thead tr { background: var(--navy); color: var(--white); }
+  .txn-table thead th { padding: 8px 12px; font-size: 9.5px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; text-align: left; }
+  .txn-table thead th.right { text-align: right; }
+  .txn-table tbody tr { border-bottom: 1px solid var(--border); }
+  .txn-table tbody tr:nth-child(even) td { background: var(--silver); }
+  .txn-table tbody td { padding: 9px 12px; font-size: 11.5px; vertical-align: top; line-height: 1.6; }
+  .txn-table tfoot tr { background: var(--silver); border-top: 2px solid var(--navy); }
+  .txn-table tfoot td { padding: 9px 12px; font-weight: 700; color: var(--navy); font-size: 11.5px; }
+  .checklist { list-style: none; margin: 8px 0; padding: 0; }
+  .checklist li { font-size: 12.5px; color: var(--text); padding: 3px 0; line-height: 1.7; }
+  .checklist li::before { content: '✓'; color: #2A7D4F; font-weight: 700; margin-right: 10px; }
+  .request-box { background: var(--navy); color: var(--white); border-radius: 4px;
+    padding: 14px 18px; margin: 18px 0; font-size: 12px; line-height: 1.9; }
+  .request-box strong { color: #D4A017; }
+  .alert-box { background: #EAF2EC; border: 1px solid #74C69D;
+    border-left: 4px solid #4A7C59; border-radius: 3px;
+    padding: 10px 14px; font-size: 12px; color: #2D4A35; line-height: 1.8; margin: 14px 0; }
+  .section-div { font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 2px; color: var(--navy); margin: 20px 0 8px;
+    display: flex; align-items: center; gap: 10px; }
+  .section-div::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .status-pill { display: inline-block; padding: 2px 9px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+  .pill-green  { background: #D4EDDA; color: #1A6633; }
+  .pill-orange { background: #FFF3CD; color: #856404; }
+  .pill-blue   { background: #D1ECF1; color: #0C5460; }
+  @page { size: 210mm 297mm; margin: 8mm 10mm; }
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body { background: #fff !important; padding: 0 !important; display: block !important; }
+    .page { width: 190mm !important; max-width: 190mm !important; margin: 0 auto !important; box-shadow: none !important; }
+    .ltr-sig-block, .footer, .request-box, .success-card, .highlight-card { page-break-inside: avoid; }
+    tr { page-break-inside: avoid; }
+    thead { display: table-header-group; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="stripe-top"></div>
+
+  <div class="header">
+    <div>
+      <div class="brand-name">SIVA ELECTRONICS & HOME APPLIANCES</div>
+      <div class="brand-tagline">Exporter of Consumer Electronics &amp; Home Appliances</div>
+      <div class="brand-address">
+        Opp. to 21, J.K. Plaza, Pallipat Main Road<br>Podhatur Pettai, Tiruvallur, Tamil Nadu – 631 208, India<br>
+        GST: 33BKPPK9686N1Z2 &nbsp;|&nbsp; IEC: BKPPK9686N<br>
+        sivaelectronicsandhomeappliances@gmail.com &nbsp;|&nbsp; +91 99436 91712
+      </div>
+    </div>
+    <div class="invoice-meta">
+      <div class="doc-stamp">Post-Transaction Intimation</div>
+      <div class="invoice-label" style="font-size:14px;">Payment Receipt Confirmation</div>
+      <table class="meta-table">
+        <tr><td>Letter No.</td><td>SEH-PSTI-2026-0001</td></tr>
+        <tr><td>Date</td><td>April 25, 2026</td></tr>
+        <tr><td>Ref. PI No.</td><td>SEH-2026-0001</td></tr>
+        <tr><td>Ref. PTI No.</td><td>SEH-PTI-2026-0001</td></tr>
+        <tr><td>Purpose Code</td><td>P0103</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="purpose-banner">
+    ★ &nbsp; Post-Transaction Intimation — 30% Advance Payment Received &nbsp;|&nbsp; USD 1,010.10 &nbsp;|&nbsp; Export of Consumer Electronics &amp; Home Appliances &nbsp;|&nbsp; Purpose Code: P0103
+  </div>
+
+  <div class="ltr-body">
+    <div class="ltr-date-block">Date: <strong>April 25, 2026</strong> &nbsp;|&nbsp; Letter No.: <strong>SEH-PSTI-2026-0001</strong></div>
+
+    <div class="ltr-address">
+      <strong>To,</strong><br>
+      [Name of Account Manager]<br>
+      Merchant Account Management Team<br>
+      [Payment Gateway Name]<br>
+      [City, India]
+    </div>
+
+    <div class="ltr-subject">
+      Subject: Post-Transaction Intimation — 30% Advance Payment of USD 1,010.10 Received from Buyer Daniel R. Fitzgerald, USA on April 25, 2026 via Online Payment Link against Export Order PI No. SEH-2026-0001 — Kindly Confirm Settlement &amp; Release of Funds
+    </div>
+
+    <div class="ltr-salutation">Dear [Account Manager Name],</div>
+
+    <div class="ltr-para">
+      We are pleased to inform you that we have successfully received the <strong>30% advance payment</strong> from our foreign buyer against the export order referenced above. This letter serves as a formal post-transaction intimation to your team, providing complete details of the payment received, the underlying export transaction, and our request for timely settlement and release of funds to our linked bank account.
+    </div>
+
+    <!-- Payment Confirmed -->
+    <div class="success-card">
+      <div class="success-title">✓ Payment Received — Confirmation Details</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;">
+        <tr><td style="color:#6B7355;padding:3px 0;width:40%;white-space:nowrap;">Payment Status</td>
+            <td style="font-weight:600;padding:3px 0;"><span class="status-pill pill-green">✓ Payment Received</span></td></tr>
+        <tr><td style="color:#6B7355;padding:3px 0;">Amount Received</td>
+            <td style="font-weight:700;font-size:14pt;font-family:'Libre Baskerville',serif;color:#1A6633;padding:3px 0;">USD 1,010.10</td></tr>
+        <tr><td style="color:#6B7355;padding:3px 0;">Payment Date</td>
+            <td style="font-weight:600;padding:3px 0;">April 25, 2026</td></tr>
+        <tr><td style="color:#6B7355;padding:3px 0;">Payment Time</td>
+            <td style="font-weight:600;padding:3px 0;">02:18 PM IST</td></tr>
+        <tr><td style="color:#6B7355;padding:3px 0;">Transaction ID</td>
+            <td style="font-weight:600;padding:3px 0;">TXN7731924806</td></tr>
+        <tr><td style="color:#6B7355;padding:3px 0;">Payment Method</td>
+            <td style="font-weight:600;padding:3px 0;">Online Payment Link (International Card / Net Banking)</td></tr>
+        <tr><td style="color:#6B7355;padding:3px 0;">Payer Name</td>
+            <td style="font-weight:600;padding:3px 0;">Daniel R. Fitzgerald</td></tr>
+        <tr><td style="color:#6B7355;padding:3px 0;">Payer Country</td>
+            <td style="font-weight:600;padding:3px 0;">United States of America</td></tr>
+        <tr><td style="color:#6B7355;padding:3px 0;">Purpose Code</td>
+            <td style="font-weight:600;padding:3px 0;">P0103 — Advance receipts against export of goods</td></tr>
+        <tr><td style="color:#6B7355;padding:3px 0;">Ref. PI No.</td>
+            <td style="font-weight:600;padding:3px 0;">SEH-2026-0001 dated April 20, 2026</td></tr>
+      </table>
+    </div>
+
+    <!-- Merchant & Buyer side by side -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:12px 0;">
+      <div style="background:#EAF3EC;border:1px solid #A8CBB5;border-left:4px solid #1B4332;border-radius:4px;padding:12px 14px;">
+        <div style="font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#1B4332;margin-bottom:8px;">Merchant Details</div>
+        <table style="width:100%;border-collapse:collapse;font-size:11.5px;">
+          <tr><td style="color:#6B7355;padding:2px 0;width:38%;white-space:nowrap;">Name</td><td style="font-weight:600;padding:2px 0;">Siva Electronics & Home Appliances</td></tr>
+          <tr><td style="color:#6B7355;padding:2px 0;">GSTIN</td><td style="font-weight:600;padding:2px 0;">33BKPPK9686N1Z2</td></tr>
+          <tr><td style="color:#6B7355;padding:2px 0;">IEC</td><td style="font-weight:600;padding:2px 0;">BKPPK9686N</td></tr>
+          <tr><td style="color:#6B7355;padding:2px 0;">AD Bank</td><td style="font-weight:600;padding:2px 0;">HDFC Bank Ltd, Tiruvallur</td></tr>
+          <tr><td style="color:#6B7355;padding:2px 0;">A/C No.</td><td style="font-weight:600;padding:2px 0;">50200114338560</td></tr>
+          <tr><td style="color:#6B7355;padding:2px 0;">IFSC</td><td style="font-weight:600;padding:2px 0;">HDFC0007166</td></tr>
+        </table>
+      </div>
+      <div style="background:#EAF3EC;border:1px solid #A8CBB5;border-left:4px solid #1B4332;border-radius:4px;padding:12px 14px;">
+        <div style="font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:#1B4332;margin-bottom:8px;">Buyer / Payer Details</div>
+        <table style="width:100%;border-collapse:collapse;font-size:11.5px;">
+          <tr><td style="color:#6B7355;padding:2px 0;width:38%;white-space:nowrap;">Name</td><td style="font-weight:600;padding:2px 0;">Daniel R. Fitzgerald</td></tr>
+          <tr><td style="color:#6B7355;padding:2px 0;">Address</td><td style="font-weight:600;padding:2px 0;word-break:break-word;">1482 Clearwater Blvd, Suite 7, Austin, Texas – 78701</td></tr>
+          <tr><td style="color:#6B7355;padding:2px 0;">Country</td><td style="font-weight:600;padding:2px 0;">United States of America</td></tr>
+          <tr><td style="color:#6B7355;padding:2px 0;">Email</td><td style="font-weight:600;padding:2px 0;word-break:break-all;">daniel.fitzgerald@austintechimports.com</td></tr>
+          <tr><td style="color:#6B7355;padding:2px 0;">Phone</td><td style="font-weight:600;padding:2px 0;">+1 (512) 394-7821</td></tr>
+          <tr><td style="color:#6B7355;padding:2px 0;">Agreement</td><td style="font-weight:600;padding:2px 0;">MA-SEH-DAN-2026 — Active</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Payment Tracker -->
+    <div class="section-div">Full Transaction Schedule — Payment Tracker</div>
+    <table class="txn-table">
+      <colgroup>
+        <col style="width:4%"><col style="width:26%"><col style="width:13%">
+        <col style="width:20%"><col style="width:14%"><col style="width:13%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>#</th><th>Payment</th><th>Amount (USD)</th>
+          <th>Expected / Actual Date</th><th>Transaction ID</th><th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>01</strong></td>
+          <td>30% Advance<br><span style="font-size:10.5px;color:var(--muted);">To confirm order &amp; commence procurement</span></td>
+          <td><strong>$1,010.10</strong></td>
+          <td>Received: April 25, 2026<br><span style="font-size:10.5px;color:var(--muted);">02:18 PM IST</span></td>
+          <td style="font-size:11px;">TXN7731924806</td>
+          <td><span class="status-pill pill-green">✓ Received</span></td>
+        </tr>
+        <tr>
+          <td><strong>02</strong></td>
+          <td>70% Balance<br><span style="font-size:10.5px;color:var(--muted);">Before dispatch — May 10, 2026</span></td>
+          <td><strong>$2,356.90</strong></td>
+          <td>Expected: May 10, 2026</td>
+          <td style="font-size:10.5px;color:var(--muted);">Pending</td>
+          <td><span class="status-pill pill-orange">⏳ Pending</span></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="2"><strong>Total Export Order Value</strong></td>
+          <td><strong>USD 3,367.00</strong></td>
+          <td colspan="2">CIF – Port of Houston, TX, USA</td>
+          <td><span class="status-pill pill-blue">In Progress</span></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <!-- Export Context -->
+    <div class="section-div">Export Order Context</div>
+    <ul class="checklist">
+      <li>Payment received is against a <strong>bona fide export of goods</strong> — Consumer Electronics and Home Appliances — from India to the USA under PI <strong>SEH-2026-0001</strong>.</li>
+      <li>A signed <strong>Master Agreement (MA-SEH-DAN-2026)</strong>, <strong>Purchase Order (PO-DAN-2026-0001)</strong>, and <strong>Letter of Intent</strong> are in place with the buyer.</li>
+      <li>Goods are scheduled for <strong>dispatch on May 12, 2026</strong> via FedEx International Priority from Chennai Sea Port (INMAS1).</li>
+      <li>Expected delivery to buyer at <strong>Port of Houston, Texas, USA by May 20, 2026</strong>.</li>
+      <li>All goods are <strong>BEE certified</strong> (Bureau of Energy Efficiency) and <strong>ISI marked</strong> where applicable, and none of the goods fall under SCOMET restricted categories.</li>
+      <li>Foreign exchange will be fully repatriated to India via <strong>HDFC Bank Ltd, Tiruvallur Branch, Tamil Nadu</strong> (IFSC: HDFC0007166) within the RBI-prescribed timeline of 9 months.</li>
+      <li>Post-shipment documents (CI, Packing List, AWB, COO, CSB-V) will be shared with your team within <strong>24 hours of dispatch</strong> on May 12, 2026.</li>
+    </ul>
+
+    <!-- Document Tracker -->
+    <div class="section-div">Document Status Tracker</div>
+    <table class="txn-table">
+      <colgroup><col style="width:5%"><col style="width:38%"><col style="width:27%"><col style="width:30%"></colgroup>
+      <thead>
+        <tr><th>#</th><th>Document</th><th>Document No.</th><th>Status / Expected On</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>01</td><td>Proforma Invoice</td><td>SEH-2026-0001</td><td><span class="status-pill pill-green">✓ Submitted — Apr 20</span></td></tr>
+        <tr><td>02</td><td>Purchase Order</td><td>PO-DAN-2026-0001</td><td><span class="status-pill pill-green">✓ Submitted — Apr 20</span></td></tr>
+        <tr><td>03</td><td>Master Agreement</td><td>MA-SEH-DAN-2026</td><td><span class="status-pill pill-green">✓ Submitted — Apr 20</span></td></tr>
+        <tr><td>04</td><td>Letter of Intent</td><td>SEH-LOI-2026-0001</td><td><span class="status-pill pill-green">✓ Submitted — Apr 20</span></td></tr>
+        <tr><td>05</td><td>FEMA Declaration</td><td>SEH-FEMA-2026-0001</td><td><span class="status-pill pill-green">✓ Submitted — Apr 20</span></td></tr>
+        <tr><td>06</td><td>Pre-Transaction Intimation</td><td>SEH-PTI-2026-0001</td><td><span class="status-pill pill-green">✓ Submitted — Apr 20</span></td></tr>
+        <tr><td>07</td><td>BEE / ISI Product Certificates</td><td>Available on request</td><td><span class="status-pill pill-green">✓ Available</span></td></tr>
+        <tr><td>08</td><td>Commercial Invoice</td><td>CI-SEH-2026-0001</td><td><span class="status-pill pill-orange">⏳ Post-Dispatch — By May 12, 2026</span></td></tr>
+        <tr><td>09</td><td>Packing List</td><td>PL-CI-SEH-2026-0001</td><td><span class="status-pill pill-orange">⏳ Post-Dispatch — By May 12, 2026</span></td></tr>
+        <tr><td>10</td><td>Airway Bill (AWB)</td><td>6394-8821-5507</td><td><span class="status-pill pill-orange">⏳ Within 24hrs of dispatch</span></td></tr>
+        <tr><td>11</td><td>Courier Shipping Bill (CSB-V)</td><td>—</td><td><span class="status-pill pill-orange">⏳ Within 48hrs of dispatch</span></td></tr>
+        <tr><td>12</td><td>Certificate of Origin (COO)</td><td>SEH-COO-2026-0001</td><td><span class="status-pill pill-orange">⏳ Post-Dispatch — By May 12, 2026</span></td></tr>
+        <tr><td>13</td><td>e-FIRC</td><td>—</td><td><span class="status-pill pill-blue">Awaited from PG post-settlement</span></td></tr>
+      </tbody>
+    </table>
+
+    <!-- Request Box -->
+    <div class="request-box">
+      <strong>Our Requests to Your Team:</strong><br><br>
+      1. &nbsp;<strong>Confirm Receipt:</strong> Please acknowledge receipt of this post-transaction intimation and confirm that the payment of <strong>USD 1,010.10 (TXN ID: TXN7731924806)</strong> has been captured successfully in your system.<br><br>
+      2. &nbsp;<strong>Initiate Settlement:</strong> Kindly process and release the settlement of <strong>USD 1,010.10</strong> to our linked bank account at <strong>HDFC Bank Ltd, Tiruvallur Branch, Tamil Nadu (A/C: 50200114338560, IFSC: HDFC0007166)</strong> at the earliest, in accordance with our agreed settlement cycle.<br><br>
+      3. &nbsp;<strong>Issue e-FIRC:</strong> Please initiate the issuance of the <strong>e-FIRC (Foreign Inward Remittance Certificate)</strong> for this transaction under Purpose Code <strong>P0103</strong> and share it with us at sivaelectronicsandhomeappliances@gmail.com.<br><br>
+      4. &nbsp;<strong>Flag Balance Payment:</strong> Please note that the <strong>70% balance payment of USD 2,356.90</strong> is expected around <strong>May 10, 2026</strong>. Kindly ensure that transaction is also processed without holds when received.<br><br>
+      5. &nbsp;<strong>Do Not Hold Funds:</strong> We request you not to place any hold on these funds. All required KYC, FEMA, SCOMET compliance, and export documentation has been submitted. Any additional requirement may be communicated to us at <strong>sivaelectronicsandhomeappliances@gmail.com</strong> and we will respond within 24 hours.
+    </div>
+
+    <div class="alert-box">
+      <strong>Important:</strong> We will share post-shipment documents including the <strong>Commercial Invoice, Packing List, AWB, COO, and CSB-V</strong> with your compliance team within 24 hours of dispatch on <strong>May 12, 2026</strong>. BEE/ISI product certificates are available on request. The e-FIRC once issued should be sent to <strong>sivaelectronicsandhomeappliances@gmail.com</strong> for our FEMA compliance records with HDFC Bank.
+    </div>
+
+    <div class="ltr-para">
+      We thank you for your support and look forward to your prompt confirmation of settlement. Please do not hesitate to reach out to us on <strong>+91 99436 91712</strong> or <strong>sivaelectronicsandhomeappliances@gmail.com</strong> for any clarification.
+    </div>
+
+    <div class="ltr-para">Yours faithfully,</div>
+
+    <div class="ltr-sig-block">
+      <div class="ltr-sig-line">
+        <div class="ltr-sig-name">Siva Electronics & Home Appliances</div>
+        <div class="ltr-sig-role">Authorised Signatory</div>
+        <div class="ltr-sig-role">Proprietor &amp; Nodal Officer — R C Karthik</div>
+        <div class="ltr-sig-role">Place: Tiruvallur, Tamil Nadu, India</div>
+        <div class="ltr-sig-role">Date: April 25, 2026</div>
+        <div class="seal-box">SEAL / STAMP</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">
+      Siva Electronics & Home Appliances &nbsp;·&nbsp; Tiruvallur, Tamil Nadu, India<br>
+      Post-Transaction Intimation Letter — SEH-PSTI-2026-0001
+    </div>
+    <div class="footer-right">
+      sivaelectronicsandhomeappliances@gmail.com<br>
+      IEC: BKPPK9686N &nbsp;·&nbsp; GSTIN: 33BKPPK9686N1Z2
+    </div>
+  </div>
+  <div class="stripe-bottom"></div>
+</div>
+</body>
+</html>
